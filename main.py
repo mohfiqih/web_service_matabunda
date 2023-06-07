@@ -24,6 +24,7 @@ app.secret_key = 'asdsdfsdfs13sdf_df%&'
 
 db = SQLAlchemy(app)
 
+
 class Users(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -61,6 +62,7 @@ def flutter_register():
         else:
             return jsonify(["Email Telah digunakan!"])
 
+
 @app.route('/register-admin', methods=["GET", "POST"])
 def register_admin():
     if request.method == "POST":
@@ -92,6 +94,7 @@ SECRET_KEY = "WhatEverYouWant"
 ISSUER = "myFlaskWebService"
 AUDIENCE_MOBILE = "myMobileApp"
 
+
 @app.route('/login', methods=["GET", "POST"])
 def flutter_login():
     if request.method == "POST":
@@ -110,7 +113,7 @@ def flutter_login():
             user = user[0]
 
         if check_password_hash(user.password, password):
-          
+
             email_encode = email.encode("utf-8")
             base64_bytes = base64.b64encode(email_encode)
             token = base64_bytes.decode("utf-8")
@@ -131,6 +134,8 @@ def flutter_login():
 ################################ End Login #####################################
 
 ################################ Token #####################################
+
+
 @app.route('/basicToken', methods=["GET", "POST"])
 def basicToken():
     if request.method == "POST":
@@ -169,10 +174,13 @@ def basicToken():
             return jsonify(["Berhasil masuk!"])
 
 # # # --------------- History --------------- # # #
+
+
 @app.route('/history-users')
 def history_users():
     all_users = Users.query.all()
     return render_template('data_users.html', users=all_users)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.0.105')
