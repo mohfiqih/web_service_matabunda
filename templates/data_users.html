@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+     <title>Data Users</title>
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     <!-- jQuery -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+     <!-- DataTables -->
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+     <link rel='stylesheet'
+          href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css'>
+     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'>
+
+</head>
+
+<body>
+     <div class="container">
+          <div class="row">
+               <div class="col-md-12">
+                    <div class="table-wrap">
+                         <br />
+                         <table class="table">
+                              <thead>
+                                   <tr>
+                                        <th style="font-weight: bold;">No</th>
+                                        <th style="font-weight: bold;">Email</th>
+                                        <th style="font-weight: bold;">Nama Lengkap</th>
+                                        <th style="font-weight: bold;">Status</th>
+                                        <th style="font-weight: bold;">Level</th>
+                                        <th style="font-weight: bold;">Tanggal</th>
+                                        <!-- <th style="font-weight: bold;"></th> -->
+                                        <th style="font-weight: bold;"></th>
+                                   </tr>
+                              </thead>
+
+                              <tbody>
+                                   {% for user in users %}
+                                   <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.status_validasi }}</td>
+                                        <td>{{ user.level }}</td>
+                                        <td>{{ user.created_at }}</td>
+                                        <!-- <td>
+                                             <a href="">
+                                                  <i class=" fa fa-pen color-black" style="color: green;"></i>
+                                             </a>
+                                        </td> -->
+                                        <td>
+                                             <a href="delete_users/{{ user.email }}"
+                                                  onclick="return confirm('Yakin hapus data user?')">
+                                                  <i class=" fa fa-trash color-black"
+                                                       style="color: rgb(243, 8, 0);"></i>
+                                             </a>
+                                        </td>
+                                   </tr>
+                                   {% endfor %}
+                              </tbody>
+
+                         </table>
+                    </div>
+               </div>
+          </div>
+     </div>
+
+     <script>
+          $(document).ready(function () {
+               $('#user-table').DataTable();
+          });
+     </script>
+</body>
+
+</html>
