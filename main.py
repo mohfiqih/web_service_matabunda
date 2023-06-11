@@ -173,6 +173,90 @@ def basicToken():
 
             return jsonify(["Berhasil masuk!"])
 
+
+@api.route('/data-user', methods=["GET", "POST"])
+class UserAPI(Resource):
+    def get(self):
+        log_data = db.session.execute(db.select(
+            Users.email, Users.name, Users.status_validasi, Users.created_at, Users.level)).all()
+        if (log_data is None):
+            return f"Tidak Ada Data User!"
+        else:
+            data = []
+            for user in log_data:
+                data.append({
+                    'email': user.email,
+                    'name': user.name,
+                    'status_validasi': user.status_validasi,
+                    'level': user.level,
+                    'craeted_at': user.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                    # 'total': total
+                })
+            return data
+
+# ------------------- Send Reset Password ------------------ #
+
+
+@app.route('/send-reset', methods=["GET", "POST"])
+def send_reset():
+    if request.method == "POST":
+        email = request.form["email"]
+
+        if not email:
+            return jsonify(["Masukan email dan password!"])
+
+        user = db.session.execute(
+            db.select(Users).filter_by(email=email)).first()
+
+        if not user:
+            return jsonify(["Password dan email salah!"])
+        else:
+            user = user[0]
+
+        if user.email:
+            link = "reset"
+            return jsonify(
+                {
+                    'message': f"Link reset berhasil dikirim!",
+                    'link': link
+                }
+            )
+        else:
+            return jsonify(["Email dan Password salah!"])
+
+
+@app.route('/reset', methods=['GET', 'POST'])
+def repassword():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        re_password = request.form["password"]
+
+        # get db
+        user = db.session.execute(
+            db.select(Users).filter_by(email=email)).first()
+
+        if not user:
+            return f'Email {email} tidak Ada!', 400
+        else:
+            user = user[0]
+
+        if email:
+            user.email = email
+            user.password = generate_password_hash(password)
+
+            db.session.add(user)
+            db.session.commit()
+
+            return redirect('/success')
+
+    return render_template('reset.html')
+
+
+@app.route('/success')
+def success():
+    return render_template('success.html')
+
 # # # --------------- History --------------- # # #
 
 
@@ -183,4 +267,4 @@ def history_users():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.0.105')
+    app.run(debug=True, host='192.168.56.122')
